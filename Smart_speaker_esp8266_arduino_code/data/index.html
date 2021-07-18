@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>color picker</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<script src="color_picker.js"></script>
+
+ <style type="text/css">
+   body{
+  background:black;
+  margin: 0;
+  padding: 0;
+}
+
+#picker{
+  border-radius: 50%;
+  box-shadow: 4px 4px 4px black,-4px -4px 4px black;
+}
+
+#shower{
+  background:white;
+}
+
+#submenu{
+  background: white;
+}
+
+#submenu span{
+  background: black;
+  text-align: center;
+  color: white;
+  font-family: Arial;
+}
+
+@media only screen and (min-width: 600px){  /*for PC*/
+  body{
+    min-width: 600px;
+  }
+
+  #container{
+    top:50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+        position: absolute;
+    background: white;
+    box-shadow: 1px 1px 5px white,-1px -1px 5px white;
+    border-radius: 5px;
+    display: inline-flex;
+    flex-direction: row;
+    margin: 10px;
+    padding: 10px;
+
+  }
+
+  #shower{
+      width: 260px;
+      margin: 0 0 0 20px;
+      height: 60px;
+      box-shadow: 0px 2px 5px black;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+  }
+
+  #submenu{
+    background: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    left: 0;
+    z-index: 5;
+    transition: .4s;
+    overflow: auto;
+    height: 280px; 
+    box-shadow: 0px 2px 5px black;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+  }
+
+  #submenu span{
+    background: black;
+    margin: 1px 0 1px 0;
+    padding: 5px;
+    font-size: 17px;
+    cursor: pointer;
+  }
+  
+  /*--------range---------*/
+  
+  #rangeBlock{
+    width: 70%;
+    margin-left: 15%; 
+  }
+
+  #range{
+    margin-top: 20px;
+    width: 100%;
+    margin-left: 0;
+    -webkit-appearance: none;
+    background: transparent;
+    color: transparent; 
+  }
+
+  #range:focus{
+    outline: none;
+  }
+
+  #range:hover + #rangeValue{
+    opacity: 1;
+  }
+
+  #range::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -10px; 
+  }
+
+  input[type=range]::-moz-range-thumb{
+    border: 1px solid #000000;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -10px; 
+  }
+
+  #range::-webkit-slider-runnable-track{
+    height: 6px;
+    cursor: pointer;
+    background: #817d4b;
+    border-radius: 4px;
+    border: 1px solid #010101;
+  }
+
+  input[type=range]::-moz-range-track{
+    height: 6px;
+    cursor: pointer;
+    background: #817d4b;
+    border-radius: 4px;
+    border: 1px solid #010101;
+  }
+
+  #rangeValue{
+    height: 20px; width:28px;
+    color:white;
+    margin-top: -50px;
+    background: #4b4b4b;
+    position: absolute;
+    text-align: center;
+    line-height: 28px;
+    opacity: 0;
+    
+  }
+
+  #rangeValue:after{
+    content: "";
+    position: absolute; 
+    left: 0;
+    top: 20px;
+    border-top: 10px solid #4b4b4b;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+  
+  }
+
+  #currentEffect{
+    text-align: center;
+    margin: 0 0 -2px 0;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+    font-family: Verdana;
+  }
+
+  #arrow{
+    display: none; 
+  }
+}
+
+@media only screen and (max-width: 600px){ /*for mobile*/
+  body{
+    overflow-y: hidden;
+  }
+  h2{
+    font-size: 40px;
+    line-height: 20px;
+  }
+
+  #container{
+    display: flex;
+    flex-direction: column;
+    /*важно для телефона т.к. при скролле наблюдаеться заторможение*/
+  }
+
+  #picker{
+    position: absolute;
+    width: 96%;
+
+              top:50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+  }
+/*
+  #shower{
+    background: white;
+    border-radius: 20px;
+      width: 50%;
+      position: fixed;
+          top:95%;
+        left:50%;
+        transform: translate(-50%,-50%);
+      height: 50px;
+      box-shadow: 1px 1px 3px 2px black;
+
+  }
+  */
+
+  #showedBlock{
+    display: none;
+  }
+
+  #submenu{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    top: 100px;
+    left: 0;
+    overflow: auto;
+    box-shadow: inset 0 15px 10px -10px #a4ff69;
+  }
+
+  #submenu span{
+    margin: 1px 0 1px 0;
+    padding: 5px;
+    font-size: 20px;
+  
+  }
+  
+  /*--------range---------*/
+
+  #rangeBlock{
+    width: 100%;
+    margin-top: 60px;
+    background: white;
+    height: 40px;
+  }
+
+  #range{
+    margin-top: 18px;
+    margin-bottom: 15px;
+    width: 90%;
+    position: relative;
+    left: 5%;
+    -webkit-appearance: none;
+    background: transparent;
+    color: transparent;
+  }
+
+  #range:focus{
+    outline: none;
+  }
+
+  #range::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -15px; 
+  }
+
+  #range::-moz-range-thumb{
+    border: 1px solid #000000;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -14px; 
+  }
+
+  #range::-webkit-slider-runnable-track{
+    height: 8px;
+    margin-top: -4px;
+    cursor: pointer;
+    background: #817d4b;
+    border-radius: 4px;
+    border: 1px solid #010101;
+  }
+
+  #range::-moz-range-track{
+      height: 8px;
+    margin-top: -4px;
+    cursor: pointer;
+    background: #817d4b;
+    border-radius: 4px;
+    border: 1px solid #010101;
+  }
+
+  #rangeValue{
+    height: 26px; width:38px;
+    color: white;
+    margin-top: -78px;
+    background: #4b4b4b;
+    position: absolute;
+    text-align: center;
+    line-height: 26px;
+    z-index: 20;
+    opacity: 0;
+    left: 5%;
+  }
+
+  #rangeValue:after{
+    content: "";
+    position: absolute; 
+    left: 0;
+    top: 26px;
+    border-top: 15px solid #4b4b4b;
+    border-left: 19px solid transparent;
+    border-right: 19px solid transparent;
+  }
+
+  #arrow{
+    fill: #817d4b;
+    stroke: black;
+    stroke-width: .2;
+    position: absolute;
+    bottom: 0px;
+  }
+    #shower{
+      width: 100%;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      height: 60px;
+      box-shadow: 1px 1px 3px 2px black;
+
+  }
+
+}
+
+@-moz-document url-prefix(){
+     #range{
+      margin-top: 10px;
+      left:2.4%;
+     }
+} 
+
+
+
+ </style>
+</head>
+<body>
+  <div id="container">
+    
+    
+    <canvas id="picker"></canvas>
+    <div id="shower" class="">
+      <div id="arrow" ><center><h2>More</h2></center></div> 
+      <div id="showedBlock">
+        <div id="rangeBlock">
+          <input type="range" id="range" step="1" value="25" min="0" max="255">
+          <p id="rangeValue"></p>
+        </div>
+        <p id="currentEffect"></p>
+        <div id="submenu">
+          <span name="1">rainbow fade</span>
+          <span name="2">rainbow loop</span>
+          <span name="3">rainbow loop 2</span>
+          <span name="4">random march</span>
+          <span name="5">rgb propeller</span>
+          <span name="6">rotating red blue</span>
+          <span name="7">fire</span>
+          <span name="8">blue fire</span>
+          <span name="9">random bars</span>
+          <span name="10">flicker</span>
+          <span name="11">random color</span>
+          <span name="12">sparkle</span>
+          <span name="13">color bounce</span>
+          <span name="14">color bounce fade</span>
+          <span name="15">blue red bounce</span>
+          <span name="16">rainbow vertical</span>
+          <span name="17">matrix</span>
+          <span name="18">rwb march</span>
+          <span name="19">flame</span>
+          <span name="20">theater chase</span>
+          <span name="21">strobe</span>
+          <span name="22">police blinker</span>
+          <span name="23">kitt</span>
+          <span name="24">rule</span>
+          <span name="25">fade vertical</span>
+          <span name="26">fade to center</span>
+          <span name="27">runner chameleon</span>
+          <span name="28">blende</span>
+          <span name="29">blende 2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+	<script >
+   
+   if(screen.width < 600) handlerMobile();
+if(screen.width > 600) handlerPC();
+
+var inputRange = document.getElementsByTagName('input')[0];
+
+var Socket = new WebSocket('ws://' + window.location.hostname + ':81/');  
+
+try{
+  document.createEvent('touchevent'); //проверка на сенсор
+
+  inputRange.addEventListener('touchstart', clickdown);
+  inputRange.addEventListener('touchend', clickup);
+}
+catch(e){ 
+  inputRange.addEventListener('mousedown', clickdown);
+  inputRange.addEventListener('mouseup', clickup);
+}
+
+function clickdown(){rangeValue.style.opacity = '1';}
+function clickup(){rangeValue.style.opacity = '0';}
+
+
+showedBlock.onclick = function(){shower.classList.toggle('show')};
+
+function handlerMobile(){
+  var span = document.getElementsByTagName('span');
+
+  for(var x = 0; x < span.length; x++){
+    span[x].onclick = function(){
+
+      for(var g = 0; g < span.length; g++){
+        span[g].style.background = '';
+        
+      }
+
+      this.style.background = '#6a9300';
+      
+      if(this.getAttribute('name') > 17){
+        this.style.background = '#cd5300';
+
+      }
+
+          var send = { action:"mode",mode:this.getAttribute('name')};
+          console.log(send);
+            Socket.send(JSON.stringify(send));
+
+    }
+  }
+
+ var posShower = document.documentElement.clientHeight-60;
+ 
+  shower.onclick = function(){
+    var is_true = this.classList.toggle('show');
+
+    if(is_true){
+      this.style.position = 'relative';
+      showedBlock.style.display = 'block';
+
+      scrolledTop = window.pageYOffset; 
+    scrollToTop();
+    
+    submenu.style.height = document.documentElement.clientHeight - 100 + 'px';
+
+    posRangeValue();
+
+      arrow.style.bottom = '-20px';
+
+    }
+    else{
+      scrolledBottom = window.pageYOffset;
+      scrollToBottom();
+      
+      shower.style.top = posShower + 'px';
+      console.log(posShower);
+      
+    setTimeout(function(){
+      showedBlock.style.display = 'none';
+    }, 300);
+
+    arrow.style.bottom = '0px';
+
+    }
+  }
+
+  var scrolledBottom;
+  var scrolledTop;
+  var timerBottom;
+  var timerTop;
+
+  function scrollToTop(){
+    if(scrolledTop < document.body.scrollHeight){
+      window.scrollTo(0, scrolledTop);
+      scrolledTop = scrolledTop + 50;
+      timerTop = setTimeout(scrollToTop, 20);
+
+    }
+    else{
+      clearTimeout(timerTop);
+      window.scrollTo(0, document.body.scrollHeight);
+
+    }
+  }
+
+  function scrollToBottom(){
+    if(scrolledBottom > 0){
+      window.scrollTo(0, scrolledBottom);
+      scrolledBottom = scrolledBottom - 50;
+      timerBottom = setTimeout(scrollToBottom, 20);
+
+    }
+    else{
+      clearTimeout(timerBottom);
+      window.scrollTo(0,0);
+
+    }
+  }
+
+  arrow.style.left = (shower.clientWidth / 2) - 50 + 'px';
+
+}
+
+function handlerPC(){
+  var span = document.getElementsByTagName('span');
+
+  for(var x = 0; x < span.length; x++){
+    span[x].onclick = function(){
+
+      for(var g = 0; g < span.length; g++){
+        span[g].style.background = '';
+
+      }
+      this.style.background = '#6a9300';
+
+      if(this.getAttribute('name') > 17){
+        this.style.background = '#cd5300';
+
+      }
+
+      currentEffect.innerText = this.innerText;
+
+        
+          var send = { action:"mode",mode:this.getAttribute('name')};
+          console.log(send);
+            Socket.send(JSON.stringify(send));
+
+    }
+  }
+  posRangeValue();
+  
+}
+
+function posRangeValue(){
+  var widthBlock = (range.clientWidth - rangeValue.clientWidth) / 100;
+
+  rangeValue.style.transform = 'translateX(' + (range.value / 2.55) * widthBlock + 'px)';
+  rangeValue.innerText = range.value;
+
+  range.oninput = function(){
+    rangeValue.innerText = parseInt(this.value / 2.55);
+    rangeValue.style.transform = 'translateX(' + ((this.value / 2.55) * widthBlock) + 'px)';
+
+
+      
+      var send = { action:"bright",bright:this.value};
+      console.log(send);
+        Socket.send(JSON.stringify(send));
+
+  } 
+}
+
+  </script>
+
+  <script>
+
+  var colorPicker = new KellyColorPicker({
+    place : 'picker'
+});
+
+colorPicker.getWheel().width += 20;
+colorPicker.getSvFigCursor().radius += 10;
+colorPicker.getWheelCursor().height += 5;
+colorPicker.resize(340);
+
+var is_active = false; 
+
+try{
+  document.createEvent("touchevent"); 
+
+  picker.addEventListener("touchstart", clickdown);
+  picker.addEventListener("touchend", clickup);
+  picker.addEventListener("touchmove", clickmove);
+}
+catch(e){ 
+  picker.addEventListener("mousedown", clickdown);
+  picker.addEventListener("mouseup", clickup);
+  picker.addEventListener("mousemove", clickmove);
+}
+
+function clickdown(){
+  is_active = true;
+}
+
+function clickup(){
+  is_active = false;
+  document.body.style.background = colorPicker.getCurColorHex();
+
+  
+  var send = {action:"color",r:colorPicker.getCurColorRgb().r,g:colorPicker.getCurColorRgb().g,b:colorPicker.getCurColorRgb().b};
+  console.log(send);
+    Socket.send(JSON.stringify(send));
+}
+
+var lastSend = 0;
+function clickmove(){
+  if(is_active){  
+      document.body.style.background = colorPicker.getCurColorHex();
+
+      var now = (new Date).getTime();
+      if (lastSend > now - 20) return; 
+      lastSend = now;
+
+      
+      var send = { action:"color",r:colorPicker.getCurColorRgb().r,g:colorPicker.getCurColorRgb().g,b:colorPicker.getCurColorRgb().b};
+      console.log(send);
+        Socket.send(JSON.stringify(send));
+  }
+}
+</script>
+
+</body>
+</html>
